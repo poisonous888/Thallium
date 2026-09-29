@@ -1,0 +1,5 @@
+name: Example-Plugin
+main: psn.thallium.Thallium
+description: For all the things components cant do
+api-version: '26.2'
+version: 1.0.0
