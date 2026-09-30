@@ -1,5 +1,11 @@
 package psn.thallium.itemhandlers
 
-class Lasso {
+import psn.thallium.listeners.CustomItem
+import psn.thallium.listeners.PlayerAttack
 
+object Lasso:CustomItem("lasso") {
+    override fun onAttack(event:PlayerAttack):Boolean {
+        event.player.sendMessage("attacked")
+        return true
+    }
 }

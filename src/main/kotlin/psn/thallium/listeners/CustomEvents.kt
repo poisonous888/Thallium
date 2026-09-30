@@ -1,4 +1,4 @@
-package psn.thallium.utils
+package psn.thallium.listeners
 
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent
 import org.bukkit.block.Block

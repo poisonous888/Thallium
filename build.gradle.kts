@@ -1,8 +1,8 @@
 plugins {
     kotlin("jvm") version "2.4.20"
     id("xyz.jpenilla.run-paper") version "3.1.0"
-    java
     id("com.gradleup.shadow") version "8.3.6"
+    java
 }
 
 group="org.example"
@@ -13,7 +13,6 @@ repositories {
     maven(url = "https://repo.papermc.io/repository/maven-public/") {
         name = "papermc"
     }
-    
 }
 
 dependencies {
