@@ -10,6 +10,7 @@ class ThalliumEntry:JavaPlugin() {
     val listeners=listOf(
         RegCustomEvents,
         CustomItemListener,
+        //Test,
     )
     
     override fun onEnable() {
