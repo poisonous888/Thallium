@@ -2,6 +2,7 @@ package psn.thallium
 
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
+import psn.thallium.listeners.CustomEntityListener
 import psn.thallium.listeners.CustomItemListener
 import psn.thallium.listeners.RegCustomEvents
 
@@ -10,7 +11,7 @@ class ThalliumEntry:JavaPlugin() {
     val listeners=listOf(
         RegCustomEvents,
         CustomItemListener,
-        //Test,
+        CustomEntityListener,
     )
     
     override fun onEnable() {

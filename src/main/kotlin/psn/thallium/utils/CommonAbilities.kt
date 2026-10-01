@@ -2,12 +2,11 @@ package psn.thallium.utils
 
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.World
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
-import psn.thallium.ThalliumEntry
+import org.bukkit.util.Vector
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.floor
@@ -23,8 +22,7 @@ val validTeleportBlocks=listOf(
 )
 fun teleportStraight(entity:Entity,blocks:Int,ether:Boolean=false){
     val startLoc=entity.location.add(0.0,1.62,0.0)
-    val endLoc=getForwardsBlock(startLoc,blocks)
-    val loc=voxelWalk(startLoc, endLoc, entity.world,ether)
+    val loc=voxelWalk(startLoc, blocks, entity.world,ether)
     
     loc.x+=0.5
     loc.y+=if(ether) 1.05 else 0.05
@@ -35,16 +33,18 @@ fun teleportStraight(entity:Entity,blocks:Int,ether:Boolean=false){
 
 }
 fun getForwardsBlock(start:Location,blocks:Int):Location{
-    val lookVec=calculateViewVector(start.pitch,start.yaw)
+    val lookVec=getViewVector(start.pitch,start.yaw)
     val end=start.clone().add(
-        lookVec.first*blocks,
-        lookVec.second*blocks,
-        lookVec.third*blocks
+        lookVec.x*blocks,
+        lookVec.y*blocks,
+        lookVec.z*blocks
     )
     return end
 }
-fun voxelWalk(start: Location,end: Location,world:World,etherWarp: Boolean=false):Location{
-    IO.println("Voxelwalk start")
+fun voxelWalk(start:Location,blocks:Int,world:World,ether:Boolean=false):Location{
+    return voxelWalk(start, getForwardsBlock(start, blocks), world, ether)
+}
+fun voxelWalk(start: Location,end: Location,world:World,ether: Boolean=false):Location{
     val x0=start.x
     val y0=start.y
     val z0=start.z
@@ -90,19 +90,14 @@ fun voxelWalk(start: Location,end: Location,world:World,etherWarp: Boolean=false
         
         if(!isPassable) {
             //found block
-            val b=(if(etherWarp)blockPos else lastValidBlock).setRotation(start.yaw,start.pitch)
-            IO.println("found solid block $b")
-            return b
+            return (if(ether)blockPos else lastValidBlock).setRotation(start.yaw,start.pitch)
         }
         //no blocks in the way
         if (x == endX && y == endY && z == endZ) {
-            val l=Location(world,x,y,z,start.yaw,start.pitch)
-            IO.println("no solid blocks")
-            return l
+            return Location(world,x,y,z,start.yaw,start.pitch)
         }
         
         //next step logic
-        IO.println("x$x y$y z$z mx$tMaxX my$tMaxY mz$tMaxZ")
         when {
             tMaxX <= tMaxY && tMaxX <= tMaxZ -> {
                 tMaxX += tDeltaX
@@ -124,12 +119,12 @@ fun voxelWalk(start: Location,end: Location,world:World,etherWarp: Boolean=false
     return start
 }
 
-fun calculateViewVector(xRot:Float,yRot:Float):Triple<Double,Double,Double> {
-    val realXRot=xRot*(Math.PI.toFloat()/180f)
-    val realYRot=-yRot*(Math.PI.toFloat()/180f)
+fun getViewVector(pitch:Float,yaw:Float):Vector {
+    val realXRot=pitch*(Math.PI.toFloat()/180f)
+    val realYRot=-yaw*(Math.PI.toFloat()/180f)
     val yCos:Double=cos(realYRot.toDouble())
     val ySin:Double=sin(realYRot.toDouble())
     val xCos:Double=cos(realXRot.toDouble())
     val xSin:Double=sin(realXRot.toDouble())
-    return Triple((ySin*xCos),(-xSin),(yCos*xCos))
+    return Vector((ySin*xCos),(-xSin),(yCos*xCos))
 }

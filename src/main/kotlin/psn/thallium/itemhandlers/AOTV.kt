@@ -2,7 +2,6 @@ package psn.thallium.itemhandlers
 
 import org.bukkit.Sound
 import psn.thallium.listeners.CustomItem
-import psn.thallium.listeners.PlayerAttack
 import psn.thallium.listeners.PlayerUse
 import psn.thallium.utils.playSound
 import psn.thallium.utils.teleportStraight
@@ -10,7 +9,7 @@ import psn.thallium.utils.teleportStraight
 object AOTV:CustomItem("aotv") {
     override fun onUse(event:PlayerUse):Boolean {
         if(event.player.isSneaking){
-            teleportStraight(event.player,61)
+            teleportStraight(event.player,61,true)
             playSound(event.player,Sound.BLOCK_NOTE_BLOCK_PLING)
             return true
         }
