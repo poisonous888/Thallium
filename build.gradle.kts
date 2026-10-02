@@ -5,8 +5,8 @@ plugins {
     java
 }
 
-group="org.example"
-version="1.0-SNAPSHOT"
+version = property("plugin_version") as String
+val mcVersion = property("minecraft_version") as String
 
 repositories {
     mavenCentral()
@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.3.build.+")
+    compileOnly("io.papermc.paper:paper-api:${property("paper_version")}")
     implementation(kotlin("stdlib"))
 }
 
@@ -31,15 +31,12 @@ java {
 
 tasks {
     val shadowJar = named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
-        archiveClassifier.set("") // Removes "-all" or "-shadow" from the output jar name
+        archiveClassifier.set("")
     }
-    
-    // Make the standard build task depend on shadowJar so it builds properly out of the box
     build {
         dependsOn(shadowJar)
     }
-    
     runServer {
-        minecraftVersion("26.2")
+        minecraftVersion(mcVersion)
     }
 }
