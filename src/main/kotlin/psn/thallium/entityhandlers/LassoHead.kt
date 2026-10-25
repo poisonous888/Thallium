@@ -1,6 +1,7 @@
 package psn.thallium.entityhandlers
 
 import com.destroystokyo.paper.event.server.ServerTickEndEvent
+import org.bukkit.entity.Item
 import org.bukkit.entity.Player
 import org.bukkit.entity.Sheep
 import psn.thallium.listeners.CustomEntity
@@ -31,7 +32,14 @@ class LassoHead:CustomEntity{
         val nearby=mover.getNearbyEntities(1.0,1.0,1.0)
         for(mob in nearby){
             if(mob == player){
-                if(timer>20)remove()
+                if(timer>20) {
+                    mover.passengers.forEach{
+                        if(it is Item){
+                            it.teleport(player)
+                        }
+                    }
+                    remove()
+                }
             }
             else{
                 mover.addPassenger(mob)

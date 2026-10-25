@@ -11,6 +11,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityUnleashEvent
 import org.bukkit.scoreboard.Team
 import psn.thallium.ThalliumEntry
+import psn.thallium.processError
 import java.util.concurrent.CopyOnWriteArrayList
 
 object CustomEntityListener:Listener{
@@ -48,8 +49,16 @@ abstract class CustomEntity{
         }
     }
     val entities=mutableListOf<Entity>()
-    inline fun <reified T:Entity> addEntity(location:Location,world:World,visualOnly:Boolean=false):T{
-        val newEntity=world.spawn(location,T::class.java)
+    inline fun <reified T:Entity> addEntity(location:Location,world:World,visualOnly:Boolean=false):T {
+        val newEntity:Entity
+        try{
+            newEntity=world.spawn(location,T::class.java)
+        }
+        catch(e:Exception){
+            return processError(e,"BAD ENTITY CREATE")
+        }
+        
+        
         entities.add(newEntity)
         if(visualOnly){
             newEntity.isInvulnerable=true

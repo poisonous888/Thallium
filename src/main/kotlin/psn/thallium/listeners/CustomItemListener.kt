@@ -1,17 +1,20 @@
 package psn.thallium.listeners
 
+import io.papermc.paper.event.player.PlayerStopUsingItemEvent
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
 import psn.thallium.ThalliumEntry
 import psn.thallium.itemhandlers.AOTV
+import psn.thallium.itemhandlers.GrapplingHook
 import psn.thallium.itemhandlers.Lasso
 
 object CustomItemListener:Listener{
     val items=listOf(
         Lasso,
         AOTV,
+        GrapplingHook,
     )
     val itemMap=items.associateBy{it.itemId}
     
@@ -24,7 +27,11 @@ object CustomItemListener:Listener{
     @EventHandler
     fun onUse(event:PlayerUse){
         if(mapToCustomItem(event.player.inventory.itemInMainHand)?.onUse(event)?:return)event.canceled=true
-        if(mapToCustomItem(event.player.inventory.itemInOffHand)?.onUse(event)?:return)event.canceled=true
+        //if(mapToCustomItem(event.player.inventory.itemInOffHand)?.onUse(event)?:return)event.canceled=true
+    }
+    @EventHandler
+    fun onStopUse(event:PlayerStopUsingItemEvent){
+        event.player.sendMessage("test")
     }
     fun mapToCustomItem(item:ItemStack):CustomItem?{
         if(item.itemMeta?.hasItemName()?:return null)
